@@ -6,7 +6,7 @@ const fetchfun = (req, res, next) => {
 
   if (!tocken) {
     return {};
-    res.status(401).send({ error: "kindly authenticate tocken" });
+    res.status(401).send({ error: "kindly authenticate token" });
   }
 
   try {
@@ -17,7 +17,7 @@ const fetchfun = (req, res, next) => {
     // console.log(req.user.id);
     next();
   } catch (error) {
-    res.status(401).send({ error: "kindly authenticate tocken tocken again" });
+    res.status(401).send({ error: "kindly authenticate token again" });
   }
 };
 module.exports = fetchfun;
