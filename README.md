@@ -1,11 +1,11 @@
 # Frontend
--create React App 
--npm i
+- create React App 
+- npm i
 - npm run hii
 
-# backend
--npm init
--npm run dev
+# Backend
+- npm init
+- npm run dev
 
 ![image](https://github.com/anshika42/TaskManager/assets/90893402/3c40e93a-db58-43aa-984f-52d88df1e912)
 ![image](https://github.com/anshika42/TaskManager/assets/90893402/dd7053c9-09af-461d-869a-309c6edeb403)
