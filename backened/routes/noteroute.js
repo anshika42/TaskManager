@@ -1,83 +1,110 @@
 const express = require("express");
 const router = express.Router();
-const notes = require("../models/Notes");
+const {db1} = require("../db");
 const fetchuser = require("../middleware/fetchUser");
 const { body, validationResult } = require("express-validator");
+
+
+// Get all notes
 router.get("/getnotes", fetchuser, async (req, res) => {
-  console.log("GET AAL NOTES CALLED", req.user.id);
-  mynotes = await notes.find({ user: req.user.id });
-  res.send(mynotes);
+  console.log("GET ALL NOTES CALLED", req.user.id);
+  try {
+    const [rows] = await db1.query('SELECT * FROM notes WHERE user_id = ?', [req.user.id]);
+    res.send(rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Database error");
+  }
 });
+// router.post("/addnotes", ()=>{
+//   console.log("working");
+// })
+// Add a new note
 router.post(
   "/addnotes",
   fetchuser,
   [
     body("title").isLength({ min: 5 }),
-    body("discription").isLength({ min: 5 }),
+    body("description").isLength({ min: 5 }),
     body("tag").isLength({ min: 5 }),
   ],
   async (req, res) => {
-    console.log("ADDD NOTES CALLED");
+    console.log("ADD NOTES CALLED");
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       console.log("error");
       return res.status(400).json({ errors: errors.array() });
     }
-    note = new notes({
-      title: req.body.title,
-      discription: req.body.discription,
-      tag: req.body.tag,
-      user: req.user.id,
-    });
-    const savednotes = await note.save();
-    res.send(savednotes);
-  }
-);
-router.put("/updatenotes/:id", fetchuser, async (req, res) => {
-  console.log("UPDATES CALLED");
-  console.log("updt", req.params.id);
-  const { title, discription, tag } = req.body;
-  newnote = {};
-  if (title) {
-    newnote.title = title;
-  }
-  if (discription) {
-    newnote.discription = discription;
-  }
-  if (tag) {
-    newnote.tag = tag;
-  }
-  const comingnoteuser = await notes.findById(req.params.id);
-  if (!comingnoteuser) {
-    res.send("user dne");
-  }
-  if (!comingnoteuser.user) {
-    res.send("u r not allowed with wrong id");
-  }
-  if (comingnoteuser.user.toString() != req.user.id) {
-    res.send("u r not allowed");
-  }
-  note = await notes.findByIdAndUpdate(
-    req.params.id,
-    { $set: newnote },
-    { new: true }
-  );
-  res.send(note);
-});
+    try {
+      const [result] = await db1.query(
+        'INSERT INTO notes (title, description, tag, user_id) VALUES (?, ?, ?, ?)',
+        [req.body.title, req.body.description, req.body.tag, req.user.id]
+      );
+      const [savedNote] = await db1.query('SELECT * FROM notes WHERE id = ?', [result.insertId]);
+      res.send(savedNote[0]);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Database error");
+    }
+  });
 
+  router.put("/updatenotes/:id", fetchuser, async (req, res) => {
+    console.log("UPDATE NOTES CALLED");
+    console.log("update", req.params.id);
+    const { title, description, tag } = req.body;
+    let newNote = {};
+    if (title) {
+      newNote.title = title;
+    }
+    if (description) {
+      newNote.description = description;
+    }
+    if (tag) {
+      newNote.tag = tag;
+    }
+    
+    try {
+      const [notes] = await db1.query('SELECT * FROM notes WHERE id = ?', [req.params.id]);
+      const note = notes[0];
+      
+      if (!note) {
+        return res.status(404).send("Note does not exist");
+      }
+      if (note.user_id !== req.user.id) {
+        return res.status(403).send("You are not allowed to update this note");
+      }
+      
+      await db1.query('UPDATE notes SET ? WHERE id = ?', [newNote, req.params.id]);
+      const [updatedNote] = await db1.query('SELECT * FROM notes WHERE id = ?', [req.params.id]);
+      res.send(updatedNote[0]);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Database error");
+    }
+  });
+
+
+
+// Delete a note
 router.delete("/deletenotes/:id", fetchuser, async (req, res) => {
   console.log("DELETE NOTES CALLED");
-  const comingnoteuser = await notes.findById(req.params.id);
-  if (!comingnoteuser) {
-    return res.status(401).json({ errors: " .user dne" });
+  try {
+    const [notes] = await db1.query('SELECT * FROM notes WHERE id = ?', [req.params.id]);
+    const note = notes[0];
+    
+    if (!note) {
+      return res.status(404).send("Note does not exist");
+    }
+    if (note.user_id !== req.user.id) {
+      return res.status(403).send("You are not allowed to delete this note");
+    }
+    
+    await db1.query('DELETE FROM notes WHERE id = ?', [req.params.id]);
+    res.send("Note has been deleted");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Database error");
   }
-  if (!comingnoteuser.user) {
-    return res.status(402).json({ errors: " .user dne, u r not allowed" });
-  }
-  if (comingnoteuser.user.toString() != req.user.id) {
-    return res.status(403).json({ errors: " sorry u r not allowed" });
-  }
-  note = await notes.findByIdAndDelete(req.params.id);
-  return res.send("note has been deleted");
 });
+
 module.exports = router;

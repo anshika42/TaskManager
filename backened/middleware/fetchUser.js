@@ -1,7 +1,9 @@
 const jwt = require("jsonwebtoken");
 const jsonwebtokensecret = "mysecret@3";
-const user = require("../models/Userschema");
+
 const fetchfun = (req, res, next) => {
+  console.log("fetchfun");
+  
   const tocken = req.header("auth-tocken");
 
   if (!tocken) {

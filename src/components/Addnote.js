@@ -1,68 +1,77 @@
 import React, { useContext, useEffect, useState } from "react";
 import MyNContext from "../context/NoteContext/noteconContext";
+import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
+
 const Addnote = () => {
   const a = useContext(MyNContext);
-  const [note, setnote] = useState({ title: "", discription: "", tag: "" });
+  const [note, setnote] = useState({ title: "", description: "", tag: "" });
   const handleclick = async (e) => {
     e.preventDefault();
-    await a.AddingNote(note.title, note.discription, note.tag);
+    await a.AddingNote(note.title, note.description, note.tag);
     console.log("le baba  name", a.notes.name);
-    setnote({ title: "", discription: "", tag: "" });
+    setnote({ title: "", description: "", tag: "" });
   };
   const handlechange = (e) => {
     setnote({ ...note, [e.target.name]: e.target.value });
   };
   return (
-    <div>
-      <h1 style={{textAlign:"center", margin:"18px"}}>Add your Notes</h1>
-      <div className="mb-3">
-        <label htmlFor="title" className="form-label" onChange={handlechange}>
-          Title
-        </label>
-        <input
-          value={note.title}
-          type="text"
-          className="form-control"
-          id="title"
-          placeholder=""
-          name="title"
-          onChange={handlechange}
-        />
-      </div>
-      <div className="mb-3">
-        <label htmlFor="exampleFormControlTextarea1" className="form-label">
-          Description
-        </label>
-        <textarea
-          value={note.discription}
-          className="form-control"
-          id="discription"
-          name="discription"
-          rows="3"
-          onChange={handlechange}
-        ></textarea>
-      </div>
-      <div className="mb-3">
-        <label htmlFor="exampleFormControlTextarea1" className="form-label">
-          <div className="mb-3">
-            <label htmlFor="exampleFormControlTextarea1" className="form-label">
-              Tag
-            </label>
-            <textarea
-              value={note.tag}
-              className="form-control"
-              id="tag"
-              name="tag"
-              rows="3"
-              onChange={handlechange}
-            ></textarea>
-          </div>
-        </label>
-      </div>
+    <Container className="mt-5">
+      <Row className="justify-content-center">
+        <Col md={6}>
+          <Card>
+            <Card.Body>
+              <h1 className="text-center mb-4">Add your Notes</h1>
+              <Form>
+                <Form.Group controlId="title">
+                  <Form.Label>Title</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={note.title}
+                    onChange={handlechange}
+                    placeholder="Enter title"
+                    name="title"
+                  />
+                </Form.Group>
 
-      <button onClick={handleclick}>submit</button>
-      <h1 style={{textAlign:"center", margin:"18px"}}>Your Notes</h1>
-    </div>
+                <Form.Group controlId="description" className="mt-3">
+                  <Form.Label>Description</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    value={note.description}
+                    onChange={handlechange}
+                    placeholder="Enter description"
+                    name="description"
+                    rows={3}
+                  />
+                </Form.Group>
+
+                <Form.Group controlId="tag" className="mt-3">
+                  <Form.Label>Tag</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    value={note.tag}
+                    onChange={handlechange}
+                    placeholder="Enter tag"
+                    name="tag"
+                    rows={3}
+                  />
+                </Form.Group>
+
+                <Button variant="primary" type="submit" onClick={handleclick} className="mt-3" >
+                  Submit
+                </Button>
+              </Form>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+
+      <Row className="justify-content-center mt-3">
+        <Col md={6}>
+          <h1 className="text-center mb-4">Your Notes</h1>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

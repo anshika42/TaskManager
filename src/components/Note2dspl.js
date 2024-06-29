@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MyNContext from "../context/NoteContext/noteconContext";
+import { Container, Row, Col, Form, Button, Card} from 'react-bootstrap';
 import Addnote from "./Addnote";
 import Note2dspItems from "./Note2dspItems";
 const Note2dspl = () => {
@@ -14,8 +15,7 @@ const Note2dspl = () => {
     etag: "t",
   });
   useEffect(() => {
-    // localStorage.removeItem("tocken");
-    // console.log("in start", localStorage.getItem("tocken"));
+   
     if (localStorage.getItem("tocken")) {
       GetAllNote();
     } else {
@@ -27,9 +27,9 @@ const Note2dspl = () => {
     ref.current.click();
     console.log(currnote._id, "hey bro");
     setnote({
-      eid: currnote._id,
+      eid: currnote.id,
       etitle: currnote.title,
-      ediscription: currnote.discription,
+      ediscription: currnote.description,
       etag: currnote.tag,
     });
   };
@@ -53,116 +53,77 @@ const Note2dspl = () => {
         Launch demo modal
       </button>
 
-      <div
-        className="modal fade"
-        id="exampleModal"
-        tabIndex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="exampleModalLabel">
-                Update
-              </h5>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div className="mb-3">
-              <label
-                htmlFor="etitle"
-                className="form-label"
-                onChange={handlechange}
-              >
-                Title
-              </label>
-              <input
-                value={note.etitle}
-                type="text"
-                className="form-control"
-                id="etitle"
-                placeholder="name@example.com"
-                name="etitle"
-                onChange={handlechange}
-              />
-            </div>
-            <div className="mb-3">
-              <label
-                htmlFor="exampleFormControlTextarea1"
-                className="form-label"
-              >
-                discription
-              </label>
-              <textarea
-                value={note.ediscription}
-                className="form-control"
-                id="ediscription"
-                name="ediscription"
-                rows="3"
-                onChange={handlechange}
-              ></textarea>
-            </div>
-            <div className="mb-3">
-              <label
-                htmlFor="exampleFormControlTextarea1"
-                className="form-label"
-              >
-                <div className="mb-3">
-                  <label
-                    htmlFor="exampleFormControlTextarea1"
-                    className="form-label"
-                  >
-                    Tag
-                  </label>
-                  <textarea
-                    value={note.etag}
-                    className="form-control"
-                    id={note.etag}
-                    name="etag"
-                    rows="3"
-                    onChange={handlechange}
-                  ></textarea>
-                </div>
-              </label>
-            </div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-              <button
-                type="button"
-                className="btn btn-primary"
-                data-bs-dismiss="modal"
-                onClick={updatehandler}
-              >
-                Update
-              </button>
-            </div>
-          </div>
-        </div>
+
+      <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div className="modal-dialog">
+    <div className="modal-content">
+      <div className="modal-header">
+        <h5 className="modal-title" id="exampleModalLabel">Update</h5>
+        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div className="row">
-        {notes.map((notess) => {
-          return (
-            <Note2dspItems
-              notes={notess}
-              updatingnote={updatingnote}
-              key={notess._id}
+      <div className="modal-body">
+        <Form>
+          <Form.Group className="mb-3">
+            <Form.Label>Title</Form.Label>
+            <Form.Control
+              value={note.etitle}
+              type="text"
+              id="etitle"
+              placeholder="name@example.com"
+              name="etitle"
+              onChange={handlechange}
             />
-          );
-        })}
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Description</Form.Label>
+            <Form.Control
+              as="textarea"
+              value={note.ediscription}
+              id="ediscription"
+              name="ediscription"
+              rows="3"
+              onChange={handlechange}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Tag</Form.Label>
+            <Form.Control
+              as="textarea"
+              value={note.etag}
+              id={note.etag}
+              name="etag"
+              rows="3"
+              onChange={handlechange}
+            />
+          </Form.Group>
+        </Form>
       </div>
+      <div className="modal-footer">
+        <Button variant="secondary" data-bs-dismiss="modal">
+          Close
+        </Button>
+        <Button variant="primary" data-bs-dismiss="modal" onClick={updatehandler}>
+          Update
+        </Button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div className="row">
+  {notes.map((notess) => {
+    return (
+      <Note2dspItems
+        notes={notess}
+        updatingnote={updatingnote}
+        key={notess._id}
+      />
+    );
+  })}
+</div>
     </>
   );
 };
 
 export default Note2dspl;
+

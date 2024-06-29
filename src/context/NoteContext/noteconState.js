@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import MyNContext from "./noteconContext";
 const NoteState = (props) => {
-  const host = "http://localhost:4000";
+  const host = "http://localhost:8080";
   const [notes, setNotes] = useState([]);
   const GetAllNote = async () => {
     const response = await fetch(`${host}/api/notes/getnotes`, {
@@ -16,15 +16,15 @@ const NoteState = (props) => {
     console.log(jsonres);
     setNotes(jsonres);
   };
-  const AddingNote = async (title, discription, tag) => {
-    console.log(title, discription, tag);
+  const AddingNote = async (title, description, tag) => {
+    console.log(title, description, tag);
     await fetch(`${host}/api/notes/addnotes`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "auth-tocken": localStorage.getItem("tocken"),
       },
-      body: JSON.stringify({ title, discription, tag }),
+      body: JSON.stringify({ title, description, tag }),
     });
     console.log("in adding notes", localStorage.getItem("tocken"));
     const response = await fetch(`${host}/api/notes/getnotes`, {
@@ -62,14 +62,14 @@ const NoteState = (props) => {
 
     setNotes(newNote);
   };
-  const UpdateNote = async (id, title, discription, tag) => {
+  const UpdateNote = async (id, title, description, tag) => {
     await fetch(`${host}/api/notes/updatenotes/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         "auth-tocken": localStorage.getItem("tocken"),
       },
-      body: JSON.stringify({ title, discription, tag }),
+      body: JSON.stringify({ title, description, tag }),
     });
     const response = await fetch(`${host}/api/notes/getnotes`, {
       method: "GET",

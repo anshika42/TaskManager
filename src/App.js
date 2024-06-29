@@ -1,4 +1,5 @@
 import "./App.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { Component } from "react";
 import Navbar from "./components/Navbar";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -14,7 +15,7 @@ export default class App extends Component {
         <NoteState>
           <Router>
             <Navbar />
-            <div className="container">
+            <div >
               <Routes>
                 <Route exact path="/" element={<Home />} />
                 <Route exact path="/Home" element={<Home />} />

@@ -1,14 +1,21 @@
-const mongoose = require("mongoose");
-const dburl = "mongodb+srv://anshikagarg883:arnikagarg@cluster0.g7ojezx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-const connectmongo = () => {
-  mongoose
-    .connect(dburl, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
-    .then(() => {
-      console.log("connection successful..");
-    })
-    .catch((err) => console.log(err));
-};
-module.exports = connectmongo;
+
+const mysql = require('mysql2/promise');
+
+const db =mysql.createPool({
+  host:"localhost",
+  user:"root",
+  password:"1234",
+  database: "user",
+})
+
+
+const db1 =mysql.createPool({
+  host:"localhost",
+  user:"root",
+  password:"1234",
+  database: "notes",
+})
+
+
+module.exports = {db,db1};
+

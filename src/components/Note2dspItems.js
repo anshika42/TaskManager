@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import MyNContext from "../context/NoteContext/noteconContext";
 const Note2dspItems = (props) => {
+  console.log(props);
   const a = useContext(MyNContext);
 
   return (
@@ -8,7 +9,7 @@ const Note2dspItems = (props) => {
       <div className="card my-3">
         <div className="card-body">
           <h5 className="card-title">{props.notes.title}</h5>
-          <p className="card-text">{props.notes.discription}</p>
+          <p className="card-text">{props.notes.description}</p>
           <p className="card-text">{props.notes.tag}</p>
           <div>
             <i
@@ -20,7 +21,7 @@ const Note2dspItems = (props) => {
             <i
               className="fa-solid fa-trash-can m-3"
               onClick={() => {
-                a.DeleteNote(props.notes._id);
+                a.DeleteNote(props.notes.id);
               }}
             ></i>
           </div>
